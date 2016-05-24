@@ -205,6 +205,7 @@ private:
     void GetPropertyHandler_IPV6_LL_ADDR(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_IPV6_ROUTE_TABLE(uint8_t header, spinel_prop_key_t key);
+    void GetPropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_MAC_SCAN_MASK(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_MAC_SCAN_PERIOD(uint8_t header, spinel_prop_key_t key);
@@ -212,7 +213,9 @@ private:
     void GetPropertyHandler_THREAD_LEADER_RID(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_THREAD_LEADER_WEIGHT(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_THREAD_LOCAL_LEADER_WEIGHT(uint8_t header, spinel_prop_key_t key);
+    void GetPropertyHandler_THREAD_NETWORK_DATA(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_THREAD_NETWORK_DATA_VERSION(uint8_t header, spinel_prop_key_t key);
+    void GetPropertyHandler_THREAD_STABLE_NETWORK_DATA(uint8_t header, spinel_prop_key_t key);
     void GetPropertyHandler_THREAD_STABLE_NETWORK_DATA_VERSION(uint8_t header, spinel_prop_key_t key);
 
     void SetPropertyHandler_POWER_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
@@ -237,7 +240,12 @@ private:
     void SetPropertyHandler_THREAD_LOCAL_LEADER_WEIGHT(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
 
     void InsertPropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
+    void InsertPropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
+    void InsertPropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
+
     void RemovePropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
+    void RemovePropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
+    void RemovePropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len);
 
 private:
 

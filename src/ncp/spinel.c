@@ -1006,8 +1006,8 @@ spinel_prop_key_to_cstr(spinel_prop_key_t prop_key)
         ret = "PROP_IPV6_ROUTE_TABLE";
         break;
 
-    case SPINEL_PROP_IPV6_EXT_ROUTE_TABLE:
-        ret = "PROP_IPV6_EXT_ROUTE_TABLE";
+    case SPINEL_PROP_THREAD_HAS_ROUTES:
+        ret = "PROP_THREAD_HAS_ROUTES";
         break;
 
     default:
@@ -1148,8 +1148,6 @@ main(void)
             goto bail;
         }
     }
-
-
 
     printf("OK\n");
     ret = 0;

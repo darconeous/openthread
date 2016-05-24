@@ -69,23 +69,24 @@ __BEGIN_DECLS
 
 typedef enum
 {
-    SPINEL_STATUS_OK                = 0, //!< Operation has completed successfully.
-    SPINEL_STATUS_FAILURE           = 1, //!< Operation has failed for some undefined reason.
+    SPINEL_STATUS_OK                = 0, ///< Operation has completed successfully.
+    SPINEL_STATUS_FAILURE           = 1, ///< Operation has failed for some undefined reason.
 
-    SPINEL_STATUS_UNIMPLEMENTED     = 2,
-    SPINEL_STATUS_INVALID_ARGUMENT  = 3,
-    SPINEL_STATUS_INVALID_STATE     = 4,
-    SPINEL_STATUS_INVALID_COMMAND   = 5,
-    SPINEL_STATUS_INVALID_INTERFACE = 6,
-    SPINEL_STATUS_INTERNAL_ERROR    = 7,
-    SPINEL_STATUS_SECURITY_ERROR    = 8,
-    SPINEL_STATUS_PARSE_ERROR       = 9,
-    SPINEL_STATUS_IN_PROGRESS       = 10,
-    SPINEL_STATUS_NOMEM             = 11,
-    SPINEL_STATUS_BUSY              = 12,
-    SPINEL_STATUS_PROPERTY_NOT_FOUND = 12,
-    SPINEL_STATUS_DROPPED           = 14,
-    SPINEL_STATUS_EMPTY             = 15,
+    SPINEL_STATUS_UNIMPLEMENTED     = 2, ///< Given operation has not been implemented.
+    SPINEL_STATUS_INVALID_ARGUMENT  = 3, ///< An argument to the operation is invalid.
+    SPINEL_STATUS_INVALID_STATE     = 4, ///< This operation is invalid for the current device state.
+    SPINEL_STATUS_INVALID_COMMAND   = 5, ///< This command is not recognized.
+    SPINEL_STATUS_INVALID_INTERFACE = 6, ///< This interface is not supported.
+    SPINEL_STATUS_INTERNAL_ERROR    = 7, ///< An internal runtime error has occured.
+    SPINEL_STATUS_SECURITY_ERROR    = 8, ///< A security/authentication error has occured.
+    SPINEL_STATUS_PARSE_ERROR       = 9, ///< A error has occured while parsing the command.
+    SPINEL_STATUS_IN_PROGRESS       = 10, ///< This operation is in progress.
+    SPINEL_STATUS_NOMEM             = 11, ///< Operation prevented due to memory pressure.
+    SPINEL_STATUS_BUSY              = 12, ///< The device is currently performing an mutually exclusive operation
+    SPINEL_STATUS_PROP_NOT_FOUND    = 12, ///< The given property is not recognized.
+    SPINEL_STATUS_DROPPED           = 14, ///< A/The packet was dropped.
+    SPINEL_STATUS_EMPTY             = 15, ///< The result of the operation is empty.
+    SPINEL_STATUS_CMD_TOO_BIG       = 16, ///< The command was too large to fit in the internal buffer.
 
     SPINEL_STATUS_RESET__BEGIN      = 112,
     SPINEL_STATUS_RESET_POWER_ON    = SPINEL_STATUS_RESET__BEGIN + 0,
@@ -301,17 +302,20 @@ typedef enum
     SPINEL_PROP_THREAD_NETWORK_DATA    = SPINEL_PROP_THREAD__BEGIN + 6, ///< [D]
     SPINEL_PROP_THREAD_NETWORK_DATA_VERSION
                                        = SPINEL_PROP_THREAD__BEGIN + 7, ///< [S]
+    SPINEL_PROP_THREAD_STABLE_NETWORK_DATA
+                                       = SPINEL_PROP_THREAD__BEGIN + 8, ///< [D]
     SPINEL_PROP_THREAD_STABLE_NETWORK_DATA_VERSION
-                                       = SPINEL_PROP_THREAD__BEGIN + 8, ///< [S]
+                                       = SPINEL_PROP_THREAD__BEGIN + 9,  ///< [S]
+    SPINEL_PROP_THREAD_ON_MESH_NETS    = SPINEL_PROP_THREAD__BEGIN + 10,  ///< array(ipv6prefix,prefixlen,stable,flags) [A(T(6CbC))]
+    SPINEL_PROP_THREAD_HAS_ROUTES      = SPINEL_PROP_THREAD__BEGIN + 11, ///< array(ipv6prefix,prefixlen,stable,flags) [A(T(6CbC))]
     SPINEL_PROP_THREAD__END            = 0x60,
 
     SPINEL_PROP_IPV6__BEGIN          = 0x60,
     SPINEL_PROP_IPV6_LL_ADDR         = SPINEL_PROP_IPV6__BEGIN + 0, ///< [6]
     SPINEL_PROP_IPV6_ML_ADDR         = SPINEL_PROP_IPV6__BEGIN + 1, ///< [6C]
     SPINEL_PROP_IPV6_ML_PREFIX       = SPINEL_PROP_IPV6__BEGIN + 2, ///< [6C]
-    SPINEL_PROP_IPV6_ADDRESS_TABLE   = SPINEL_PROP_IPV6__BEGIN + 3, ///< array(ipv6addr,prefixlen,flags) [A(6CL)]
-    SPINEL_PROP_IPV6_ROUTE_TABLE     = SPINEL_PROP_IPV6__BEGIN + 4, ///< array(ipv6prefix,prefixlen,iface,flags) [A(6CCL)]
-    SPINEL_PROP_IPV6_EXT_ROUTE_TABLE = SPINEL_PROP_IPV6__BEGIN + 5, ///< array(ipv6prefix,prefixlen,flags) [A(6CL)]
+    SPINEL_PROP_IPV6_ADDRESS_TABLE   = SPINEL_PROP_IPV6__BEGIN + 3, ///< array(ipv6addr,prefixlen,flags) [A(T(6CL))]
+    SPINEL_PROP_IPV6_ROUTE_TABLE     = SPINEL_PROP_IPV6__BEGIN + 4, ///< array(ipv6prefix,prefixlen,iface,flags) [A(T(6CCL))]
     SPINEL_PROP_IPV6__END            = 0x70,
 
     SPINEL_PROP_STREAM__BEGIN       = 0x70,
