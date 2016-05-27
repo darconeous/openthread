@@ -258,7 +258,9 @@ void NcpBase::HandleDatagramFromStack(Message &message)
                             "CiiS",
                             SPINEL_HEADER_FLAG | SPINEL_HEADER_IID_0,
                             SPINEL_CMD_PROP_VALUE_IS,
-                            SPINEL_PROP_STREAM_NET,
+                            message.GetSecurityValid()
+                            ? SPINEL_PROP_STREAM_NET
+                            : SPINEL_PROP_STREAM_NET_INSECURE,
                             message.GetLength()
                         );
         }
@@ -332,7 +334,7 @@ void NcpBase::HandleActiveScanResult(otActiveScanResult *result)
             result->mExtAddress.m8,// laddr
             0xFFFF, // saddr, Not given
             result->mPanId,//panid
-            0xFF,//lqi, not given
+            result->mLqi,//lqi
             SPINEL_PROTOCOL_TYPE_THREAD,//proto
             flags,
             result->mNetworkName,//networkid
@@ -436,7 +438,7 @@ void NcpBase::HandleCommand(uint8_t header, unsigned int command, const uint8_t 
     // We only support IID zero for now.
     VerifyOrExit(SPINEL_HEADER_GET_IID(header) == 0, SendLastStatus(header, SPINEL_STATUS_INVALID_INTERFACE););
 
-    for (i = 0; i < sizeof(mCommandHandlerTable)/sizeof(mCommandHandlerTable[0]); i++)
+    for (i = 0; i < sizeof(mCommandHandlerTable) / sizeof(mCommandHandlerTable[0]); i++)
     {
         if (mCommandHandlerTable[i].mCommand == command)
         {
@@ -444,7 +446,7 @@ void NcpBase::HandleCommand(uint8_t header, unsigned int command, const uint8_t 
         }
     }
 
-    if (i < sizeof(mCommandHandlerTable)/sizeof(mCommandHandlerTable[0]))
+    if (i < sizeof(mCommandHandlerTable) / sizeof(mCommandHandlerTable[0]))
     {
         (this->*mCommandHandlerTable[i].mHandler)(header, command, arg_ptr, arg_len);
     }
@@ -475,7 +477,7 @@ void NcpBase::HandleCommandPropertyGet(uint8_t header, spinel_prop_key_t key)
         ExitNow(;);
     }
 
-    for (i = 0; i < sizeof(mGetPropertyHandlerTable)/sizeof(mGetPropertyHandlerTable[0]); i++)
+    for (i = 0; i < sizeof(mGetPropertyHandlerTable) / sizeof(mGetPropertyHandlerTable[0]); i++)
     {
         if (mGetPropertyHandlerTable[i].mPropKey == key)
         {
@@ -483,7 +485,7 @@ void NcpBase::HandleCommandPropertyGet(uint8_t header, spinel_prop_key_t key)
         }
     }
 
-    if (i < sizeof(mGetPropertyHandlerTable)/sizeof(mGetPropertyHandlerTable[0]))
+    if (i < sizeof(mGetPropertyHandlerTable) / sizeof(mGetPropertyHandlerTable[0]))
     {
         (this->*mGetPropertyHandlerTable[i].mHandler)(header, key);
     }
@@ -516,7 +518,7 @@ void NcpBase::HandleCommandPropertySet(uint8_t header, spinel_prop_key_t key, co
         ExitNow(;);
     }
 
-    for (i = 0; i < sizeof(mSetPropertyHandlerTable)/sizeof(mSetPropertyHandlerTable[0]); i++)
+    for (i = 0; i < sizeof(mSetPropertyHandlerTable) / sizeof(mSetPropertyHandlerTable[0]); i++)
     {
         if (mSetPropertyHandlerTable[i].mPropKey == key)
         {
@@ -524,7 +526,7 @@ void NcpBase::HandleCommandPropertySet(uint8_t header, spinel_prop_key_t key, co
         }
     }
 
-    if (i < sizeof(mSetPropertyHandlerTable)/sizeof(mSetPropertyHandlerTable[0]))
+    if (i < sizeof(mSetPropertyHandlerTable) / sizeof(mSetPropertyHandlerTable[0]))
     {
         (this->*mSetPropertyHandlerTable[i].mHandler)(header, key, value_ptr, value_len);
     }
@@ -557,7 +559,7 @@ void NcpBase::HandleCommandPropertyInsert(uint8_t header, spinel_prop_key_t key,
         ExitNow(;);
     }
 
-    for (i = 0; i < sizeof(mInsertPropertyHandlerTable)/sizeof(mInsertPropertyHandlerTable[0]); i++)
+    for (i = 0; i < sizeof(mInsertPropertyHandlerTable) / sizeof(mInsertPropertyHandlerTable[0]); i++)
     {
         if (mInsertPropertyHandlerTable[i].mPropKey == key)
         {
@@ -565,7 +567,7 @@ void NcpBase::HandleCommandPropertyInsert(uint8_t header, spinel_prop_key_t key,
         }
     }
 
-    if (i < sizeof(mInsertPropertyHandlerTable)/sizeof(mInsertPropertyHandlerTable[0]))
+    if (i < sizeof(mInsertPropertyHandlerTable) / sizeof(mInsertPropertyHandlerTable[0]))
     {
         (this->*mInsertPropertyHandlerTable[i].mHandler)(header, key, value_ptr, value_len);
     }
@@ -598,7 +600,7 @@ void NcpBase::HandleCommandPropertyRemove(uint8_t header, spinel_prop_key_t key,
         ExitNow(;);
     }
 
-    for (i = 0; i < sizeof(mRemovePropertyHandlerTable)/sizeof(mRemovePropertyHandlerTable[0]); i++)
+    for (i = 0; i < sizeof(mRemovePropertyHandlerTable) / sizeof(mRemovePropertyHandlerTable[0]); i++)
     {
         if (mRemovePropertyHandlerTable[i].mPropKey == key)
         {
@@ -606,7 +608,7 @@ void NcpBase::HandleCommandPropertyRemove(uint8_t header, spinel_prop_key_t key,
         }
     }
 
-    if (i < sizeof(mRemovePropertyHandlerTable)/sizeof(mRemovePropertyHandlerTable[0]))
+    if (i < sizeof(mRemovePropertyHandlerTable) / sizeof(mRemovePropertyHandlerTable[0]))
     {
         (this->*mRemovePropertyHandlerTable[i].mHandler)(header, key, value_ptr, value_len);
     }
@@ -758,7 +760,8 @@ void NcpBase::CommandHandler_RESET(uint8_t header, unsigned int command, const u
     SendLastStatus(0, SPINEL_STATUS_RESET_SOFTWARE);
 }
 
-void NcpBase::CommandHandler_PROP_VALUE_GET(uint8_t header, unsigned int command, const uint8_t *arg_ptr, uint16_t arg_len)
+void NcpBase::CommandHandler_PROP_VALUE_GET(uint8_t header, unsigned int command, const uint8_t *arg_ptr,
+                                            uint16_t arg_len)
 {
     unsigned int propKey = 0;
     spinel_ssize_t parsedLength;
@@ -775,7 +778,8 @@ void NcpBase::CommandHandler_PROP_VALUE_GET(uint8_t header, unsigned int command
     }
 }
 
-void NcpBase::CommandHandler_PROP_VALUE_SET(uint8_t header, unsigned int command, const uint8_t *arg_ptr, uint16_t arg_len)
+void NcpBase::CommandHandler_PROP_VALUE_SET(uint8_t header, unsigned int command, const uint8_t *arg_ptr,
+                                            uint16_t arg_len)
 {
     unsigned int propKey = 0;
     spinel_ssize_t parsedLength;
@@ -794,7 +798,8 @@ void NcpBase::CommandHandler_PROP_VALUE_SET(uint8_t header, unsigned int command
     }
 }
 
-void NcpBase::CommandHandler_PROP_VALUE_INSERT(uint8_t header, unsigned int command, const uint8_t *arg_ptr, uint16_t arg_len)
+void NcpBase::CommandHandler_PROP_VALUE_INSERT(uint8_t header, unsigned int command, const uint8_t *arg_ptr,
+                                               uint16_t arg_len)
 {
     unsigned int propKey = 0;
     spinel_ssize_t parsedLength;
@@ -813,7 +818,8 @@ void NcpBase::CommandHandler_PROP_VALUE_INSERT(uint8_t header, unsigned int comm
     }
 }
 
-void NcpBase::CommandHandler_PROP_VALUE_REMOVE(uint8_t header, unsigned int command, const uint8_t *arg_ptr, uint16_t arg_len)
+void NcpBase::CommandHandler_PROP_VALUE_REMOVE(uint8_t header, unsigned int command, const uint8_t *arg_ptr,
+                                               uint16_t arg_len)
 {
     unsigned int propKey = 0;
     spinel_ssize_t parsedLength;
@@ -1072,13 +1078,15 @@ void NcpBase::GetPropertyHandler_MAC_SCAN_MASK(uint8_t header, spinel_prop_key_t
         errorCode = OutboundFrameFeedPacked("Cii", header, SPINEL_CMD_PROP_VALUE_IS, key);
     }
 
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 32; i++)
+    {
         if (errorCode != kThreadError_None)
         {
             break;
         }
 
-        if (0 != (mChannelMask & (1 << i))) {
+        if (0 != (mChannelMask & (1 << i)))
+        {
             errorCode = OutboundFrameFeedPacked(SPINEL_DATATYPE_UINT8_S, i);
         }
     }
@@ -1417,7 +1425,7 @@ void NcpBase::GetPropertyHandler_IPV6_ML_PREFIX(uint8_t header, spinel_prop_key_
         memcpy(addr.m8, ml_prefix, 8);
 
         // Zero out the last 8 bytes.
-        memset(addr.m8+8, 0, 8);
+        memset(addr.m8 + 8, 0, 8);
 
         SendPropteryUpdate(
             header,
@@ -1530,13 +1538,15 @@ void NcpBase::GetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t ke
 // MARK: Individual Property Setters
 // ----------------------------------------------------------------------------
 
-void NcpBase::SetPropertyHandler_POWER_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_POWER_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                             uint16_t value_len)
 {
     // TODO: Implement POWER_STATE
     SendLastStatus(header, SPINEL_STATUS_UNIMPLEMENTED);
 }
 
-void NcpBase::SetPropertyHandler_PHY_ENABLED(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_PHY_ENABLED(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                             uint16_t value_len)
 {
     bool value = false;
     spinel_ssize_t parsedLength;
@@ -1575,13 +1585,15 @@ void NcpBase::SetPropertyHandler_PHY_ENABLED(uint8_t header, spinel_prop_key_t k
     }
 }
 
-void NcpBase::SetPropertyHandler_PHY_TX_POWER(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_PHY_TX_POWER(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                              uint16_t value_len)
 {
     // TODO: Implement PHY_TX_POWER
     SendLastStatus(header, SPINEL_STATUS_UNIMPLEMENTED);
 }
 
-void NcpBase::SetPropertyHandler_PHY_CHAN(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_PHY_CHAN(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                          uint16_t value_len)
 {
     unsigned int i = 0;
     spinel_ssize_t parsedLength;
@@ -1613,22 +1625,27 @@ void NcpBase::SetPropertyHandler_PHY_CHAN(uint8_t header, spinel_prop_key_t key,
     }
 }
 
-void NcpBase::SetPropertyHandler_PHY_PROMISCUOUS_MODE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_PHY_PROMISCUOUS_MODE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                      uint16_t value_len)
 {
     // TODO: Implement PHY_PROMISCUOUS_MODE, once the API becomes available.
     SendLastStatus(header, SPINEL_STATUS_UNIMPLEMENTED);
 }
 
-void NcpBase::SetPropertyHandler_MAC_SCAN_MASK(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_MAC_SCAN_MASK(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                               uint16_t value_len)
 {
     ThreadError errorCode = kThreadError_None;
     uint32_t new_mask(0);
 
-    for(;value_len!=0;value_len--,value_ptr++) {
-        if (value_ptr[0] > 31) {
+    for (; value_len != 0; value_len--, value_ptr++)
+    {
+        if (value_ptr[0] > 31)
+        {
             errorCode = kThreadError_InvalidArgs;
             break;
         }
+
         new_mask |= (1 << value_ptr[0]);
     }
 
@@ -1643,7 +1660,8 @@ void NcpBase::SetPropertyHandler_MAC_SCAN_MASK(uint8_t header, spinel_prop_key_t
     }
 }
 
-void NcpBase::SetPropertyHandler_MAC_SCAN_PERIOD(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_MAC_SCAN_PERIOD(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                 uint16_t value_len)
 {
     uint16_t tmp(mScanPeriod);
     spinel_ssize_t parsedLength;
@@ -1665,7 +1683,8 @@ void NcpBase::SetPropertyHandler_MAC_SCAN_PERIOD(uint8_t header, spinel_prop_key
     }
 }
 
-void NcpBase::SetPropertyHandler_MAC_SCAN_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_MAC_SCAN_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                uint16_t value_len)
 {
     unsigned int i = 0;
     spinel_ssize_t parsedLength;
@@ -1689,10 +1708,10 @@ void NcpBase::SetPropertyHandler_MAC_SCAN_STATE(uint8_t header, spinel_prop_key_
         case SPINEL_SCAN_STATE_BEACON:
             gActiveScanContextHack = this;
             errorCode = otActiveScan(
-                (mChannelMask >> kPhyMinChannel),
-                mScanPeriod,
-                &HandleActiveScanResult_Jump
-            );
+                            (mChannelMask >> kPhyMinChannel),
+                            mScanPeriod,
+                            &HandleActiveScanResult_Jump
+                        );
             break;
 
         case SPINEL_SCAN_STATE_ENERGY:
@@ -1720,7 +1739,8 @@ void NcpBase::SetPropertyHandler_MAC_SCAN_STATE(uint8_t header, spinel_prop_key_
 
 }
 
-void NcpBase::SetPropertyHandler_MAC_15_4_PANID(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_MAC_15_4_PANID(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                uint16_t value_len)
 {
     uint16_t tmp;
     spinel_ssize_t parsedLength;
@@ -1752,7 +1772,8 @@ void NcpBase::SetPropertyHandler_MAC_15_4_PANID(uint8_t header, spinel_prop_key_
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_ENABLED(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_ENABLED(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                             uint16_t value_len)
 {
     bool value = false;
     spinel_ssize_t parsedLength;
@@ -1791,7 +1812,8 @@ void NcpBase::SetPropertyHandler_NET_ENABLED(uint8_t header, spinel_prop_key_t k
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_STATE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                           uint16_t value_len)
 {
     unsigned int i(0);
     spinel_ssize_t parsedLength;
@@ -1875,7 +1897,8 @@ void NcpBase::SetPropertyHandler_NET_STATE(uint8_t header, spinel_prop_key_t key
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_ROLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_ROLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                          uint16_t value_len)
 {
     unsigned int i(0);
     spinel_ssize_t parsedLength;
@@ -1924,9 +1947,10 @@ void NcpBase::SetPropertyHandler_NET_ROLE(uint8_t header, spinel_prop_key_t key,
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_NETWORK_NAME(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_NETWORK_NAME(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                  uint16_t value_len)
 {
-    const char* string(NULL);
+    const char *string(NULL);
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;
 
@@ -1956,7 +1980,8 @@ void NcpBase::SetPropertyHandler_NET_NETWORK_NAME(uint8_t header, spinel_prop_ke
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_XPANID(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_XPANID(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                            uint16_t value_len)
 {
     const uint8_t *ptr = NULL;
     spinel_size_t len;
@@ -1981,7 +2006,8 @@ void NcpBase::SetPropertyHandler_NET_XPANID(uint8_t header, spinel_prop_key_t ke
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_MASTER_KEY(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_MASTER_KEY(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                uint16_t value_len)
 {
     const uint8_t *ptr = NULL;
     spinel_size_t len;
@@ -2015,7 +2041,8 @@ void NcpBase::SetPropertyHandler_NET_MASTER_KEY(uint8_t header, spinel_prop_key_
     }
 }
 
-void NcpBase::SetPropertyHandler_NET_KEY_SEQUENCE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_NET_KEY_SEQUENCE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                  uint16_t value_len)
 {
     unsigned int i(0);
     spinel_ssize_t parsedLength;
@@ -2038,7 +2065,8 @@ void NcpBase::SetPropertyHandler_NET_KEY_SEQUENCE(uint8_t header, spinel_prop_ke
     }
 }
 
-void NcpBase::SetPropertyHandler_THREAD_LOCAL_LEADER_WEIGHT(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_THREAD_LOCAL_LEADER_WEIGHT(uint8_t header, spinel_prop_key_t key,
+                                                            const uint8_t *value_ptr, uint16_t value_len)
 {
     ThreadError errorCode = kThreadError_None;
     uint8_t value = 0;
@@ -2072,12 +2100,8 @@ void NcpBase::SetPropertyHandler_THREAD_LOCAL_LEADER_WEIGHT(uint8_t header, spin
 
 
 
-void NcpBase::SetPropertyHandler_STREAM_NET_INSECURE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
-{
-    SendLastStatus(header, SPINEL_STATUS_UNIMPLEMENTED);
-}
-
-void NcpBase::SetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_STREAM_NET_INSECURE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                     uint16_t value_len)
 {
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;
@@ -2093,6 +2117,9 @@ void NcpBase::SetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t ke
     }
     else
     {
+        // STREAM_NET_INSECURE packets are not secured at layer 2.
+        message.SetSecurityValid(false);
+
         parsedLength = spinel_datatype_unpack(
                            value_ptr,
                            value_len,
@@ -2104,6 +2131,7 @@ void NcpBase::SetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t ke
                        );
 
         // We ignore metadata for now.
+        // May later include TX power, allow retransmits, etc...
         (void)meta_ptr;
         (void)meta_len;
 
@@ -2130,7 +2158,66 @@ void NcpBase::SetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t ke
     }
 }
 
-void NcpBase::SetPropertyHandler_IPV6_ML_PREFIX(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::SetPropertyHandler_STREAM_NET(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                            uint16_t value_len)
+{
+    spinel_ssize_t parsedLength;
+    ThreadError errorCode = kThreadError_None;
+    const uint8_t *frame_ptr(NULL);
+    unsigned int frame_len(0);
+    const uint8_t *meta_ptr(NULL);
+    unsigned int meta_len(0);
+    Message *message(Ip6::Ip6::NewMessage(0));
+
+    if (message == NULL)
+    {
+        errorCode = kThreadError_NoBufs;
+    }
+    else
+    {
+        // STREAM_NET requires layer 2 security.
+        message.SetSecurityValid(true);
+
+        parsedLength = spinel_datatype_unpack(
+                           value_ptr,
+                           value_len,
+                           SPINEL_DATATYPE_DATA_S SPINEL_DATATYPE_DATA_S,
+                           &frame_ptr,
+                           &frame_len,
+                           &meta_ptr,
+                           &meta_len
+                       );
+
+        // We ignore metadata for now.
+        // May later include TX power, allow retransmits, etc...
+        (void)meta_ptr;
+        (void)meta_len;
+
+        errorCode = message->Append(frame_ptr, frame_len);
+    }
+
+    if (errorCode == kThreadError_None)
+    {
+        errorCode = Ip6::Ip6::HandleDatagram(*message, NULL, sThreadNetif->GetInterfaceId(), NULL, true);
+    }
+
+    if (errorCode == kThreadError_None)
+    {
+        if (SPINEL_HEADER_GET_TID(header) != 0)
+        {
+            // Only send a successful status update if
+            // there was a transaction id in the header.
+            SendLastStatus(header, SPINEL_STATUS_OK);
+        }
+    }
+    else
+    {
+        SendLastStatus(header, ThreadErrorToSpinelStatus(errorCode));
+    }
+}
+
+void NcpBase::SetPropertyHandler_IPV6_ML_PREFIX(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                uint16_t value_len)
 {
     ThreadError errorCode = kThreadError_None;
 
@@ -2160,7 +2247,8 @@ void NcpBase::SetPropertyHandler_IPV6_ML_PREFIX(uint8_t header, spinel_prop_key_
 // ----------------------------------------------------------------------------
 
 
-void NcpBase::InsertPropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::InsertPropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                       uint16_t value_len)
 {
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;
@@ -2203,7 +2291,8 @@ void NcpBase::InsertPropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_pr
     }
 }
 
-void NcpBase::InsertPropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::InsertPropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                      uint16_t value_len)
 {
     const static int kPreferenceOffset = 6;
     const static int kPreferenceMask = 3 << kPreferenceOffset;
@@ -2254,7 +2343,8 @@ void NcpBase::InsertPropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_pro
     }
 }
 
-void NcpBase::InsertPropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::InsertPropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                        uint16_t value_len)
 {
     const static int kPreferenceOffset = 6;
     const static int kPreferenceMask = 3 << kPreferenceOffset;
@@ -2321,7 +2411,8 @@ void NcpBase::InsertPropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_p
 // ----------------------------------------------------------------------------
 
 
-void NcpBase::RemovePropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::RemovePropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                       uint16_t value_len)
 {
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;
@@ -2365,7 +2456,8 @@ void NcpBase::RemovePropertyHandler_IPV6_ADDRESS_TABLE(uint8_t header, spinel_pr
     }
 }
 
-void NcpBase::RemovePropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::RemovePropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                      uint16_t value_len)
 {
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;
@@ -2407,7 +2499,8 @@ void NcpBase::RemovePropertyHandler_THREAD_HAS_ROUTES(uint8_t header, spinel_pro
     }
 }
 
-void NcpBase::RemovePropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr, uint16_t value_len)
+void NcpBase::RemovePropertyHandler_THREAD_ON_MESH_NETS(uint8_t header, spinel_prop_key_t key, const uint8_t *value_ptr,
+                                                        uint16_t value_len)
 {
     spinel_ssize_t parsedLength;
     ThreadError errorCode = kThreadError_None;

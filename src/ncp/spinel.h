@@ -145,6 +145,13 @@ enum
     SPINEL_PROTOCOL_TYPE_THREAD    = 3,
 };
 
+enum
+{
+    SPINEL_PHY_MODE_NORMAL       = 0,
+    SPINEL_PHY_MODE_PROMISCUOUS  = 1,
+    SPINEL_PHY_MODE_MONITOR      = 2,
+};
+
 typedef struct
 {
     uint8_t bytes[8];
@@ -266,7 +273,7 @@ typedef enum
     SPINEL_PROP_PHY_TX_POWER            = SPINEL_PROP_PHY__BEGIN + 5, ///< [c]
     SPINEL_PROP_PHY_RSSI                = SPINEL_PROP_PHY__BEGIN + 6, ///< dBm [c]
     SPINEL_PROP_PHY_RAW_STREAM_ENABLED  = SPINEL_PROP_PHY__BEGIN + 7, ///< [C]
-    SPINEL_PROP_PHY_PROMISCUOUS_MODE    = SPINEL_PROP_PHY__BEGIN + 8, ///< [C]
+    SPINEL_PROP_PHY_MODE                = SPINEL_PROP_PHY__BEGIN + 8, ///< [C]
     SPINEL_PROP_PHY__END                = 0x30,
 
     SPINEL_PROP_MAC__BEGIN           = 0x30,
@@ -298,14 +305,14 @@ typedef enum
     SPINEL_PROP_THREAD_LEADER_RID      = SPINEL_PROP_THREAD__BEGIN + 3, ///< [C]
     SPINEL_PROP_THREAD_LEADER_WEIGHT   = SPINEL_PROP_THREAD__BEGIN + 4, ///< [6]
     SPINEL_PROP_THREAD_LOCAL_LEADER_WEIGHT
-                                       = SPINEL_PROP_THREAD__BEGIN + 5, ///< [6]
+    = SPINEL_PROP_THREAD__BEGIN + 5, ///< [6]
     SPINEL_PROP_THREAD_NETWORK_DATA    = SPINEL_PROP_THREAD__BEGIN + 6, ///< [D]
     SPINEL_PROP_THREAD_NETWORK_DATA_VERSION
-                                       = SPINEL_PROP_THREAD__BEGIN + 7, ///< [S]
+    = SPINEL_PROP_THREAD__BEGIN + 7, ///< [S]
     SPINEL_PROP_THREAD_STABLE_NETWORK_DATA
-                                       = SPINEL_PROP_THREAD__BEGIN + 8, ///< [D]
+    = SPINEL_PROP_THREAD__BEGIN + 8, ///< [D]
     SPINEL_PROP_THREAD_STABLE_NETWORK_DATA_VERSION
-                                       = SPINEL_PROP_THREAD__BEGIN + 9,  ///< [S]
+    = SPINEL_PROP_THREAD__BEGIN + 9,  ///< [S]
     SPINEL_PROP_THREAD_ON_MESH_NETS    = SPINEL_PROP_THREAD__BEGIN + 10,  ///< array(ipv6prefix,prefixlen,stable,flags) [A(T(6CbC))]
     SPINEL_PROP_THREAD_HAS_ROUTES      = SPINEL_PROP_THREAD__BEGIN + 11, ///< array(ipv6prefix,prefixlen,stable,flags) [A(T(6CbC))]
     SPINEL_PROP_THREAD__END            = 0x60,
