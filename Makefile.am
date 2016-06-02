@@ -37,6 +37,7 @@ SUBDIRS                             = \
     src                               \
     third_party                       \
     examples                          \
+    tools                             \
     tests                             \
     doc                               \
     $(NULL)
@@ -64,6 +65,7 @@ PRETTY_SUBDIRS                      = \
     examples                          \
     include                           \
     src                               \
+    tools                             \
     tests                             \
     $(NULL)
 

@@ -433,6 +433,8 @@ src/ncp/Makefile
 src/core/Makefile
 third_party/Makefile
 third_party/mbedtls/Makefile
+tools/Makefile
+tools/ncp-sniffer/Makefile
 examples/Makefile
 examples/posix/Makefile
 examples/posix/app/Makefile
