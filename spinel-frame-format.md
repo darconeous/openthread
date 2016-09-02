@@ -6,11 +6,9 @@ A frame is defined simply as the concatenation of
  *  A command (up to three bytes, see (#packed-unsigned-integer) for format)
  *  An optional command payload
 
-    FRAME = HEADER CMD [CMD_PAYLOAD]
-
-Octets: |    1   | 1-3 |       *n*
---------|--------|-----|-----------------
-Fields: | HEADER | CMD | *[CMD_PAYLOAD]*
+Octets: |    1   | 1-3 |    *n*
+--------|--------|-----|-------------
+Fields: | HEADER | CMD | CMD_PAYLOAD
 
 
 ## Header Format ###
@@ -22,7 +20,7 @@ The header byte is broken down as follows:
     |  FLG  |  IID  |      TID      |
     +---+---+---+---+---+---+---+---+
 
-### Flag ####
+### FLG: Flag
 
 The flag field of the header byte (`FLG`) is always set to the value
 two (or `10` in binary). Any frame received with these bits set to
@@ -33,7 +31,7 @@ defining the first two bit in this way we can disambiguate between
 Spinel frames and HCI frames (which always start with either `0x01`
 or `0x04`) without any additional framing overhead.
 
-### Interface Identifier (IID) ####
+### IID: Interface Identifier
 
 The Interface Identifier (IID) is a number between 0 and 3 which
 identifies which subinterface the frame is intended for. This allows
@@ -41,7 +39,7 @@ the protocol to support connecting to more than one network at once.
 The first subinterface (0) is considered the primary subinterface and
 MUST be supported. Support for all other subinterfaces is OPTIONAL.
 
-### Transaction Identifier (TID) ####
+### TID: Transaction Identifier
 
 The least significant bits of the header represent the Transaction
 Identifier(TID). The TID is used for correlating responses to the

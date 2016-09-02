@@ -55,7 +55,7 @@ capability in `PROP_CAPS`.
 
 ## Properties
 
-### PROP 6: PROP_HBO_MEM_MAX {#prop-hbo-mem-max}
+### PROP 10: PROP_HBO_MEM_MAX {#prop-hbo-mem-max}
 
 * Type: Read-Write
 * Packed-Encoding: `L`
@@ -73,7 +73,7 @@ This value is encoded as an unsigned 32-bit integer.
 This property is only available if the `CAP_HBO`
 capability is present in `PROP_CAPS`.
 
-### PROP 7: PROP_HBO_BLOCK_MAX  {#prop-hbo-block-max}
+### PROP 11: PROP_HBO_BLOCK_MAX  {#prop-hbo-block-max}
 
 * Type: Read-Write
 * Packed-Encoding: `S`

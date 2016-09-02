@@ -1,47 +1,12 @@
-# General Properties
+## Core Properties {#prop-core}
 
-While the majority of the properties that allow the configuration
-of network connectivity are network protocol specific, there are
-several properties that are required in all implementations.
-
-* 0: `PROP_LAST_STATUS`
-* 1: `PROP_PROTOCOL_VERSION`
-* 2: `PROP_NCP_VERSION`
-* 3: `PROP_INTERFACE_TYPE`
-* 4: `PROP_VENDOR_ID`
-* 5: `PROP_CAPS`
-* 6: `PROP_INTERFACE_COUNT`
-* 7: `PROP_POWER_STATE`
-* 8: `PROP_HWADDR`
-* 9: `PROP_LOCK`
-* 10: `PROP_HBO_MEM_MAX` (See (#prop-hbo-mem-max))
-* 11: `PROP_HBO_BLOCK_MAX` (See (#prop-hbo-block-max))
-* 112: `PROP_STREAM_DEBUG`
-* 113: `PROP_STREAM_RAW`
-* 114: `PROP_STREAM_NET`
-* 115: `PROP_STREAM_NET_INSECURE`
-
-Additionally, future property allocations **SHALL** be made from the
-following allocation plan:
-
-Property ID Range     | Description
-----------------------|------------------
-0 - 127               | Reserved for frequently-used core properties
-128 - 15,359          | Unallocated
-15,360 - 16,383       | Vendor-specific
-16,384 - 1,999,999    | Unallocated
-2,000,000 - 2,097,151 | Experimental use only
-
-For an explanation of the data format encoding shorthand used
-throughout this section, see (#data-packing).
-
-## PROP 0: PROP_LAST_STATUS
+### PROP 0: PROP_LAST_STATUS {#prop-last-status}
 
 * Type: Read-Only
 * Encoding: `i`
 
 Octets: |       1-3
---------|------------------
+-------:|------------------
 Fields: | PROP_LAST_STATUS
 
 Describes the status of the last operation. Encoded as a packed
@@ -53,9 +18,9 @@ pretty much any Host-to-NCP operation.
 It is emitted automatically at NCP startup with a value indicating
 the reset reason.
 
-See section 6 for the complete list of status codes.
+See (#status-codes) for the complete list of status codes.
 
-## PROP 1: PROP_PROTOCOL_VERSION
+### PROP 1: PROP_PROTOCOL_VERSION {#prop-protocol-version}
 
 * Type: Read-Only
 * Encoding: `ii`
@@ -71,7 +36,7 @@ four fields, each encoded as a packed unsigned integer:
  *  Minor Version Number
 
 
-### Major Version Number ####
+#### Major Version Number
 
 The major version number is used to identify large and incompatible
 differences between protocol versions.
@@ -79,7 +44,7 @@ differences between protocol versions.
 The host MUST enter a FAULT state if it does not explicitly support
 the given major version number.
 
-### Minor Version Number ####
+#### Minor Version Number
 
 The minor version number is used to identify small but otherwise
 compatible differences between protocol versions. A mismatch between
@@ -87,7 +52,7 @@ the advertised minor version number and the minor version that is
 supported by the host SHOULD NOT be fatal to the operation of the
 host.
 
-## PROP 2: PROP_NCP_VERSION
+### PROP 2: PROP_NCP_VERSION {#prop-ncp-version}
 
 * Type: Read-Only
 * Packed-Encoding: `U`
@@ -110,7 +75,7 @@ Examples:
  *  `OpenThread/1.0d26-25-gb684c7f; DEBUG; May 9 2016 18:22:04`
  *  `ConnectIP/2.0b125 s1 ALPHA; Sept 24 2015 20:49:19`
 
-## PROP 3: PROP_INTERFACE_TYPE
+### PROP 3: PROP_INTERFACE_TYPE {#prop-interface-type}
 
 * Type: Read-Only
 * Encoding: `i`
@@ -129,7 +94,7 @@ Currently defined values are:
 The host MUST enter a FAULT state if it does not recognize the
 protocol given by the NCP.
 
-## PROP 4: PROP_INTERFACE_VENDOR_ID
+### PROP 4: PROP_INTERFACE_VENDOR_ID {#prop-interface-vendor-id}
 
 * Type: Read-Only
 * Encoding: `i`
@@ -140,7 +105,7 @@ Fields: | VENDOR_ID
 
 Vendor identifier.
 
-## PROP 2: PROP_CAPS
+### PROP 5: PROP_CAPS {#prop-caps}
 
 * Type: Read-Only
 * Packed-Encoding: `A(i)`
@@ -175,6 +140,7 @@ Currently defined values are:
  * 48: `CAP_ROLE_ROUTER`
  * 49: `CAP_ROLE_SLEEPY`
  * 52: `CAP_NET_THREAD_1_0`
+ * 512: `CAP_MAC_WHITELIST`
 
 Additionally, future capability allocations SHALL be made from the
 following allocation plan:
@@ -188,7 +154,7 @@ Capability Range      | Description
 2,000,000 - 2,097,151 | Experimental use only
 
 
-## PROP 4: PROP_INTERFACE_COUNT
+### PROP 6: PROP_INTERFACE_COUNT {#prop-interface-count}
 
 * Type: Read-Only
 * Packed-Encoding: `C`
@@ -203,7 +169,7 @@ always be one.
 
 This value is encoded as an unsigned 8-bit integer.
 
-## PROP 5: PROP_POWER_STATE
+### PROP 7: PROP_POWER_STATE {#prop-power-state}
 
 * Type: Read-Write
 * Packed-Encoding: `C`
@@ -230,7 +196,7 @@ Defined values are:
  *  4: `POWER_STATE_ONLINE`: NCP is fully powered. (e.g. "Parent"
     node)
 
-## PROP 6: PROP_HWADDR
+### PROP 8: PROP_HWADDR {#prop-hwaddr}
 
 * Type: Read-Only*
 * Packed-Encoding: `E`
@@ -242,7 +208,7 @@ Fields: | PROP_HWADDR
 The static EUI64 address of the device. This value is read-only, but
 may be writable under certain vendor-defined circumstances.
 
-## PROP 6: PROP_LOCK
+### PROP 9: PROP_LOCK {#prop-lock}
 
 * Type: Read-Write
 * Packed-Encoding: `b`
@@ -258,7 +224,7 @@ NCP is effectively frozen until it is cleared.
 
 This property is only supported if the `CAP_LOCK` capability is present.
 
-## PROP 112: PROP_STREAM_DEBUG
+### PROP 112: PROP_STREAM_DEBUG {#prop-stream-debug}
 
 * Type: Read-Only-Stream
 * Packed-Encoding: `U`
@@ -274,7 +240,7 @@ output which may be displayed in the host logs.
 To receive the debugging stream, you wait for `CMD_PROP_VALUE_IS` commands for
 this property from the NCP.
 
-## PROP 113: PROP_STREAM_RAW
+### PROP 113: PROP_STREAM_RAW {#prop-stream-raw}
 
 * Type: Read-Write-Stream
 * Packed-Encoding: `DD`
@@ -298,7 +264,7 @@ on this property with the value of the raw packet.
 Any data past the end of `FRAME_DATA_LEN` is considered metadata. The format
 of the metadata is defined by the associated MAC and PHY being used.
 
-## PROP 114: PROP_STREAM_NET
+### PROP 114: PROP_STREAM_NET {#prop-stream-net}
 
 * Type: Read-Write-Stream
 * Packed-Encoding: `DD`
@@ -321,7 +287,7 @@ the value of the packet.
 Any data past the end of `FRAME_DATA_LEN` is considered metadata. The format
 of the metadata is defined by the associated network protocol.
 
-## PROP 114: PROP_STREAM_NET_INSECURE
+### PROP 114: PROP_STREAM_NET_INSECURE {#prop-stream-net-insecure}
 
 * Type: Read-Write-Stream
 * Packed-Encoding: `DD`

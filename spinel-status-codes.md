@@ -1,5 +1,21 @@
 # Status Codes
 
+Status codes are sent from the NCP to the host via
+`PROP_LAST_STATUS` using the `CMD_VALUE_IS` command to indicate
+the return status of a previous command. As with any response,
+the TID field of the FLAG byte is used to correlate the response
+with the request.
+
+Note that most successfully executed commands do not indicate
+a last status of `STATUS_OK`. The usual way the NCP indicates a
+successful command is to mirror the property change back to the
+host. For example, if you do a `CMD_VALUE_SET` on `PROP_PHY_ENABLED`,
+the NCP would indicate success by responding with a `CMD_VALUE_IS`
+for `PROP_PHY_ENABLED`. If the command failed, `PROP_LAST_STATUS`
+would be emitted instead.
+
+See (#prop-last-status) for more information on `PROP_LAST_STATUS`.
+
  *  0: `STATUS_OK`: Operation has completed successfully.
  *  1: `STATUS_FAILURE`: Operation has failed for some undefined
     reason.

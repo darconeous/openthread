@@ -1,25 +1,6 @@
 # Commands
 
-* CMD 0: (Host->NCP) `CMD_NOOP`
-* CMD 1: (Host->NCP) `CMD_RESET`
-* CMD 2: (Host->NCP) `CMD_PROP_VALUE_GET`
-* CMD 3: (Host->NCP) `CMD_PROP_VALUE_SET`
-* CMD 4: (Host->NCP) `CMD_PROP_VALUE_INSERT`
-* CMD 5: (Host->NCP) `CMD_PROP_VALUE_REMOVE`
-* CMD 6: (NCP->Host) `CMD_PROP_VALUE_IS`
-* CMD 7: (NCP->Host) `CMD_PROP_VALUE_INSERTED`
-* CMD 8: (NCP->Host) `CMD_PROP_VALUE_REMOVED`
-* CMD 9: (Host->NCP) `CMD_NET_SAVE` (See section B.1.1.)
-* CMD 10: (Host->NCP) `CMD_NET_CLEAR`  (See section B.1.2.)
-* CMD 11: (Host->NCP) `CMD_NET_RECALL`  (See section B.1.3.)
-* CMD 12: (NCP->Host) `CMD_HBO_OFFLOAD` (See section C.1.1.)
-* CMD 13: (NCP->Host) `CMD_HBO_RECLAIM` (See section C.1.2.)
-* CMD 14: (NCP->Host) `CMD_HBO_DROP` (See section C.1.3.)
-* CMD 15: (Host->NCP) `CMD_HBO_OFFLOADED` (See section C.1.4.)
-* CMD 16: (Host->NCP) `CMD_HBO_RECLAIMED` (See section C.1.5.)
-* CMD 17: (Host->NCP) `CMD_HBO_DROPPED` (See section C.1.6.)
-
-## CMD 0: (Host->NCP) CMD_NOOP
+## CMD 0: (Host->NCP) CMD_NOOP {#cmd-noop}
 
 Octets: |    1   |     1
 --------|--------|----------
@@ -35,7 +16,7 @@ There is no error condition for this command.
 
 
 
-## CMD 1: (Host->NCP) CMD_RESET
+## CMD 1: (Host->NCP) CMD_RESET {#cmd-reset}
 
 Octets: |    1   |     1
 --------|--------|----------
@@ -54,7 +35,7 @@ instead with the value set to the generated status code for the error.
 
 
 
-## CMD 2: (Host->NCP) CMD_PROP_VALUE_GET
+## CMD 2: (Host->NCP) CMD_PROP_VALUE_GET {#prop-value-get}
 
 Octets: |    1   |          1         |   1-3
 --------|--------|--------------------|---------
@@ -71,7 +52,7 @@ instead with the value set to the generated status code for the error.
 
 
 
-## CMD 3: (Host->NCP) CMD_PROP_VALUE_SET
+## CMD 3: (Host->NCP) CMD_PROP_VALUE_SET {#prop-value-set}
 
 Octets: |    1   |          1         |   1-3   |    *n*
 --------|--------|--------------------|---------|------------
@@ -90,7 +71,7 @@ with the value set to the generated status code for the error.
 
 
 
-## CMD 4: (Host->NCP) CMD_PROP_VALUE_INSERT
+## CMD 4: (Host->NCP) CMD_PROP_VALUE_INSERT {#prop-value-insert}
 
 Octets: |    1   |          1            |   1-3   |    *n*
 --------|--------|-----------------------|---------|------------
@@ -111,7 +92,7 @@ with the value set to the generated status code for the error.
 
 
 
-## CMD 5: (Host->NCP) CMD_PROP_VALUE_REMOVE
+## CMD 5: (Host->NCP) CMD_PROP_VALUE_REMOVE {#prop-value-remove}
 
 Octets: |    1   |          1            |   1-3   |    *n*
 --------|--------|-----------------------|---------|------------
@@ -133,7 +114,7 @@ If an error occurs, the value of `PROP_LAST_STATUS` will be emitted
 with the value set to the generated status code for the error.
 
 
-## CMD 6: (NCP->Host) CMD_PROP_VALUE_IS
+## CMD 6: (NCP->Host) CMD_PROP_VALUE_IS {#prop-value-is}
 
 Octets: |    1   |          1        |   1-3   |    *n*
 --------|--------|-------------------|---------|------------
@@ -150,7 +131,7 @@ the current value of the given property.
 
 
 
-## CMD 7: (NCP->Host) CMD_PROP_VALUE_INSERTED
+## CMD 7: (NCP->Host) CMD_PROP_VALUE_INSERTED {#prop-value-inserted}
 
 Octets: |    1   |            1            |   1-3   |    *n*
 --------|--------|-------------------------|---------|------------
@@ -168,7 +149,7 @@ the value that was inserted into the given property.
 The resulting order of items in the list is defined by the given
 property.
 
-## CMD 8: (NCP->Host) CMD_PROP_VALUE_REMOVED
+## CMD 8: (NCP->Host) CMD_PROP_VALUE_REMOVED {#prop-value-removed}
 
 Octets: |    1   |            1           |   1-3   |    *n*
 --------|--------|------------------------|---------|------------

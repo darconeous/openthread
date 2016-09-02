@@ -7,9 +7,16 @@
 
 SRC  := $(wildcard draft-*.md)
 TXT  := $(patsubst %.md,%.txt,$(SRC))
-UID  := `id -u`
-GID  := `id -g`
-CWD  := `pwd`
+HTML  := $(patsubst %.md,%.html,$(SRC))
+
+DOCKER ?= docker
+
+TOOL_PREFIX ?= docker run --rm --user=`id -u`:`id -g` -v `pwd`:/rfc -v $(HOME)/.cache/xml2rfc:/var/cache/xml2rfc paulej/rfctools
+
+MD2RFC ?= $(TOOL_PREFIX) md2rfc
+XML2RFC ?= $(TOOL_PREFIX) xml2rfc
+MMARK ?= $(TOOL_PREFIX) mmark
+
 
 # Ensure the xml2rfc cache directory exists locally
 IGNORE := $(shell mkdir -p $(HOME)/.cache/xml2rfc)
@@ -17,7 +24,14 @@ IGNORE := $(shell mkdir -p $(HOME)/.cache/xml2rfc)
 all: $(TXT) $(HTML)
 
 clean:
-	rm -f draft*.txt draft-*.xml
+	rm -f draft-*.txt draft-*.xml draft-*.html
 
-%.txt: %.md
-	docker run --rm --user=$(UID):$(GID) -v $(CWD):/rfc -v $(HOME)/.cache/xml2rfc:/var/cache/xml2rfc paulej/rfctools md2rfc $^
+%.xml: %.md
+	$(MMARK) -xml2 -page $^ $@
+
+%.html: %.xml
+	$(XML2RFC) --html $^
+
+%.txt: %.xml
+	$(XML2RFC) --text $^
+
