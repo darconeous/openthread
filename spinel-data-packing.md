@@ -16,37 +16,37 @@ Each primitive datatype has an ASCII character associated with it.
 Structures can be represented as strings of these characters. For
 example:
 
- *  `"C"`: A single unsigned byte.
- *  `"C6U"`: A single unsigned byte, followed by a 128-bit IPv6
+ *  `C`: A single unsigned byte.
+ *  `C6U`: A single unsigned byte, followed by a 128-bit IPv6
     address, followed by a zero-terminated UTF8 string.
- *  `"A(6)"`: An array of IPv6 addresses
+ *  `A(6)`: An array of IPv6 addresses
 
 In each case, the data is represented exactly as described. For
 example, an array of 10 IPv6 address is stored as 160 bytes.
 
 ## Primitive Types
 
- *  0: `DATATYPE_NULL`
- *  `'.'`: `DATATYPE_VOID`: Empty data type. Used internally.
- *  `'b'`: `DATATYPE_BOOL`: Boolean value. Encoded in 8-bits as either
-    `0x00` or `0x01`. All other values are illegal.
- *  `'C'`: `DATATYPE_UINT8`: Unsigned 8-bit integer.
- *  `'c'`: `DATATYPE_INT8`: Signed 8-bit integer.
- *  `'S'`: `DATATYPE_UINT16`: Unsigned 16-bit integer. (Little-endian)
- *  `'s'`: `DATATYPE_INT16`: Signed 16-bit integer. (Little-endian)
- *  `'L'`: `DATATYPE_UINT32`: Unsigned 32-bit integer. (Little-endian)
- *  `'l'`: `DATATYPE_INT32`: Signed 32-bit integer. (Little-endian)
- *  `'i'`: `DATATYPE_UINT_PACKED`: Packed Unsigned Integer. (See
-    (#packed-unsigned-integer))
- *  `'6'`: `DATATYPE_IPv6ADDR`: IPv6 Address. (Big-endian)
- *  `'E'`: `DATATYPE_EUI64`: EUI-64 Address. (Big-endian)
- *  `'e'`: `DATATYPE_EUI48`: EUI-48 Address. (Big-endian)
- *  `'D'`: `DATATYPE_DATA`: Arbitrary Data. (See (#data-blobs))
- *  `'U'`: `DATATYPE_UTF8`: Zero-terminated UTF8-encoded string.
- *  `'T'`: `DATATYPE_STRUCT`: Structured datatype. Compound type. (See
-    (#structured-data))
- *  `'A'`: `DATATYPE_ARRAY`: Array of datatypes. Compound type. (See
-    (#arrays))
+Char | Name                | Description
+-----|:--------------------|:------------------------------
+ `.` | DATATYPE_VOID        | Empty data type. Used internally.
+ `b` | DATATYPE_BOOL        | Boolean value. Encoded in 8-bits as either 0x00 or 0x01. All other values are illegal.
+ `C` | DATATYPE_UINT8       | Unsigned 8-bit integer.
+ `c` | DATATYPE_INT8        | Signed 8-bit integer.
+ `S` | DATATYPE_UINT16      | Unsigned 16-bit integer.
+ `s` | DATATYPE_INT16       | Signed 16-bit integer.
+ `L` | DATATYPE_UINT32      | Unsigned 32-bit integer.
+ `l` | DATATYPE_INT32       | Signed 32-bit integer.
+ `i` | DATATYPE_UINT_PACKED | Packed Unsigned Integer. See (#packed-unsigned-integer).
+ `6` | DATATYPE_IPv6ADDR    | IPv6 Address. (Big-endian)
+ `E` | DATATYPE_EUI64       | EUI-64 Address. (Big-endian)
+ `e` | DATATYPE_EUI48       | EUI-48 Address. (Big-endian)
+ `D` | DATATYPE_DATA        | Arbitrary Data. See (#data-blobs).
+ `U` | DATATYPE_UTF8        | Zero-terminated UTF8-encoded string.
+ `T` | DATATYPE_STRUCT      | Structured datatype. Compound type. See (#structured-data).
+ `A` | DATATYPE_ARRAY       | Array of datatypes. Compound type. See (#arrays).
+
+All multi-byte values are little-endian unless explicitly stated
+otherwise.
 
 ## Packed Unsigned Integer
 

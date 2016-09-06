@@ -125,7 +125,7 @@ Currently defined values are:
 
  * 1: `CAP_LOCK`
  * 2: `CAP_NET_SAVE`
- * 3: `CAP_HBO`: Host Block Offload (See Section C.)
+ * 3: `CAP_HBO`: Host Buffer Offload. See (#feature-host-buffer-offload).
  * 4: `CAP_POWER_SAVE`
  * 16: `CAP_802_15_4_2003`
  * 17: `CAP_802_15_4_2006`
@@ -225,6 +225,10 @@ NCP is effectively frozen until it is cleared.
 
 This property is only supported if the `CAP_LOCK` capability is present.
 
+Unlike most other properties, setting this property to true when the
+value of the property is already true **MUST** fail with a last status
+of `STATUS_ALREADY`.
+
 ### PROP 112: PROP_STREAM_DEBUG {#prop-stream-debug}
 
 * Type: Read-Only-Stream
@@ -238,8 +242,12 @@ This property is a streaming property, meaning that you cannot explicitly
 fetch the value of this property. The stream provides human-readable debugging
 output which may be displayed in the host logs.
 
-To receive the debugging stream, you wait for `CMD_PROP_VALUE_IS` commands for
-this property from the NCP.
+The location of newline characters is not assumed by the host: it is
+the NCP's responsibility to insert newline characters where needed,
+just like with any other text stream.
+
+To receive the debugging stream, you wait for `CMD_PROP_VALUE_IS`
+commands for this property from the NCP.
 
 ### PROP 113: PROP_STREAM_RAW {#prop-stream-raw}
 
@@ -263,7 +271,8 @@ raw packets. If this capability is supported, you may call `CMD_PROP_VALUE_SET`
 on this property with the value of the raw packet.
 
 Any data past the end of `FRAME_DATA_LEN` is considered metadata. The format
-of the metadata is defined by the associated MAC and PHY being used.
+of the metadata is defined by the associated MAC and PHY being used, and
+typically includes RSSI/TX-Power, LQI, etc.
 
 ### PROP 114: PROP_STREAM_NET {#prop-stream-net}
 
@@ -286,7 +295,8 @@ To send network packets, you call `CMD_PROP_VALUE_SET` on this property with
 the value of the packet.
 
 Any data past the end of `FRAME_DATA_LEN` is considered metadata. The format
-of the metadata is defined by the associated network protocol.
+of the metadata is defined by the associated network protocol and
+typically includes RSSI/TX-Power, LQI, etc.
 
 ### PROP 114: PROP_STREAM_NET_INSECURE {#prop-stream-net-insecure}
 
@@ -310,5 +320,6 @@ To send network packets, you call `CMD_PROP_VALUE_SET` on this property with
 the value of the packet.
 
 Any data past the end of `FRAME_DATA_LEN` is considered metadata. The format
-of the metadata is defined by the associated network protocol.
+of the metadata is defined by the associated network protocol, and
+typically includes RSSI/TX-Power, LQI, etc.
 

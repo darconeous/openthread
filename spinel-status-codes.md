@@ -34,14 +34,17 @@ See (#prop-last-status) for more information on `PROP_LAST_STATUS`.
     pressure.
  *  12: `STATUS_BUSY`: The device is currently performing a mutually exclusive
     operation.
- *  13: `STATUS_PROPERTY_NOT_FOUND`: The given property is not recognized.
+ *  13: `STATUS_PROP_NOT_FOUND`: The given property is not recognized.
  *  14: `STATUS_PACKET_DROPPED`: The packet was dropped.
  *  15: `STATUS_EMPTY`: The result of the operation is empty.
  *  16: `STATUS_CMD_TOO_BIG`: The command was too large to fit in the internal
     buffer.
  *  17: `STATUS_NO_ACK`: The packet was not acknowledged.
  *  18: `STATUS_CCA_FAILURE`: The packet was not sent due to a CCA failure.
- *  19-111: *RESERVED*
+ *  19: `STATUS_ALREADY`: The operation is already in progress or
+    the property was already set to the given value.
+ *  20: `STATUS_ITEM_NOT_FOUND`: The given item could not be found in the property. 
+ *  21-111: *RESERVED*
  *  112-127: Reset Causes
      *  112: `STATUS_RESET_POWER_ON`
      *  113: `STATUS_RESET_EXTERNAL`

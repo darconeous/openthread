@@ -11,7 +11,7 @@
     [pi]
     editing = "yes"
     private = "OpenThread"
-    compact = "no"
+    compact = "yes"
     subcompact = "yes"
     comments = "yes"
 

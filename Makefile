@@ -27,12 +27,12 @@ clean:
 	rm -f draft-*.txt draft-*.xml draft-*.html
 
 %.xml: %.md
-	$(MMARK) -xml2 -page $^ $@
+	$(MMARK) -xml2 -page $< $@
 
 %.html: %.xml
-	$(XML2RFC) --html $^
+	$(XML2RFC) --html $<
 
 %.txt: %.xml
-	$(XML2RFC) --text $^
+	$(XML2RFC) --text $<
 
-draft-spinel-protocol-bis.md: spinel-commands.md spinel-data-packing.md spinel-example-sessions.md spinel-feature-host-buffer-offload.md spinel-feature-network-save.md spinel-frame-format.md spinel-framing.md spinel-prop-core.md spinel-prop-ipv6.md spinel-prop-mac.md spinel-prop-net.md spinel-prop-phy.md spinel-prop.md spinel-status-codes.md spinel-tech-thread.md spinel-test-vectors.md
+draft-spinel-protocol-bis.xml: draft-spinel-protocol-bis.md spinel-commands.md spinel-data-packing.md spinel-example-sessions.md spinel-feature-host-buffer-offload.md spinel-feature-network-save.md spinel-frame-format.md spinel-framing.md spinel-prop-core.md spinel-prop-ipv6.md spinel-prop-mac.md spinel-prop-net.md spinel-prop-phy.md spinel-prop.md spinel-status-codes.md spinel-tech-thread.md spinel-test-vectors.md
