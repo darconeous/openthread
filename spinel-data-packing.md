@@ -52,12 +52,15 @@ example, an array of 10 IPv6 address is stored as 160 bytes.
 
 For certain types of integers, such command or property identifiers,
 usually have a value on the wire that is less than 127. However, in
-order to not preclude the use of values larger than 256, we would need
+order to not preclude the use of values larger than 255, we would need
 to add an extra byte. Doing this would add an extra byte to the vast
 majority of instances, which can add up in terms of bandwidth.
 
-The packed unsigned integer format is inspired by the encoding scheme
-in UTF8 identical to the unsigned integer format in EXI.
+The packed unsigned integer format is based on the [unsigned integer
+format in EXI][EXI], except that we limit the maximum value to the
+largest value that can be encoded into three bytes(2,097,151).
+
+[EXI]: https://www.w3.org/TR/exi/#encodingUnsignedInteger
 
 For all values less than 127, the packed form of the number is simply
 a single byte which directly represents the number. For values larger
@@ -110,6 +113,11 @@ few different ways in the following sections.
 
 When a length is prepended, the length is encoded as a little-endian
 unsigned 16-bit integer.
+
+A> Originally the length was a [PUI](#packed-unsigned-integer), but
+A> it was changed to an unsigned 16-bit integer in order to help
+A> reduce protocol requirements.
+A> <!-- RQ -- Should we consider moving back to using a PUI here? -->
 
 ## Structured Data
 

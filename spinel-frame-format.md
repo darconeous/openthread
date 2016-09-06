@@ -20,6 +20,14 @@ The header byte is broken down as follows:
     |  FLG  |  IID  |      TID      |
     +---+---+---+---+---+---+---+---+
 
+<!-- RQ -- Eventually, when https://github.com/miekg/mmark/issues/95
+is addressed, the above table should be swapped out with this:
+
+| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+|  FLG ||  IID ||      TID   ||||
+-->
+
 ### FLG: Flag
 
 The flag field of the header byte (`FLG`) is always set to the value

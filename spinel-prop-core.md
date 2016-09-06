@@ -5,9 +5,9 @@
 * Type: Read-Only
 * Encoding: `i`
 
-Octets: |       1-3
--------:|------------------
-Fields: | PROP_LAST_STATUS
+Octets: |    1-3
+-------:|-------------
+Fields: | LAST_STATUS
 
 Describes the status of the last operation. Encoded as a packed
 unsigned integer.
@@ -35,6 +35,7 @@ four fields, each encoded as a packed unsigned integer:
  *  Major Version Number
  *  Minor Version Number
 
+This document describes major version 4, minor version 1 of this protocol.
 
 #### Major Version Number
 

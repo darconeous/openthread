@@ -11,6 +11,9 @@
     [pi]
     editing = "yes"
     private = "OpenThread"
+    compact = "no"
+    subcompact = "yes"
+    comments = "yes"
 
 	[[author]]
 	initials = "R."
@@ -37,15 +40,17 @@ While initially designed to support Thread-based NCPs, the NCP protocol
 has been designed with a layered approach that allows it to be easily
 adapted to other network technologies in the future.
 
-.# Note
+.# Status of This Document
+
+This document is a work in progress and subject to change.
+
+.# Copyright Notice
 
 Copyright (c) 2016 Nest Labs, All Rights Reserved
 
-THIS DOCUMENT IS A WORK IN PROGRESS AND SUBJECT TO CHANGE.
-
 {mainmatter}
 
-# Introduction ##
+# Introduction #
 
 This Network Control Processor (NCP) protocol was designed to enable a host
 device to communicate with and manage a NCP while also achieving the
@@ -65,12 +70,26 @@ following goals:
 On top of this core framework, we define the properties and commands
 to enable various features and network protocols.
 
-# Definitions ##
+# Definitions #
 
- *  **NCP**: Network Control Processor
- *  **Host**: Computer or Micro-controller which controls the NCP.
- *  **TID**: Transaction Identifier (0-15)
- *  **IID**: Interface Identifier (0-3)
+NCP
+: Acryonym for Network Control Processor.
+
+Host
+: Computer or Micro-controller which controls the NCP.
+
+TID
+: Transaction Identifier. May be a value between zero and fifteen.
+  See (#tid-transaction-identifier) for more information.
+
+IID
+: Interface Identifier. May be a value between zero and three.
+  See (#iid-interface-identifier) for more information.
+
+PUI
+: Packed Unsigned Integer. A way to serialize an unsigned integer
+  using one, two, or three bytes. Used throughout the Spinel protocol.
+  See (#packed-unsigned-integer) for more information.
 
 {{spinel-frame-format.md}}
 
@@ -93,3 +112,5 @@ to enable various features and network protocols.
 {{spinel-tech-thread.md}}
 
 {{spinel-test-vectors.md}}
+
+{{spinel-example-sessions.md}}
