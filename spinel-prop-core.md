@@ -60,7 +60,7 @@ host.
 
 Octets: |       *n*
 --------|-------------------
-Fields: | `NCP_VESION_STRING`
+Fields: | NCP_VESION_STRING
 
 Contains a string which describes the firmware currently running on
 the NCP. Encoded as a zero-terminated UTF-8 string.
@@ -177,7 +177,7 @@ This value is encoded as an unsigned 8-bit integer.
 
 Octets: |        1
 --------|------------------
-Fields: | `PROP_POWER_STATE`
+Fields: | POWER_STATE
 
 Describes the current power state of the NCP. By writing to this
 property you can manage the lower state of the NCP. Enumeration is
@@ -204,7 +204,7 @@ Defined values are:
 
 Octets: |    8
 --------|------------
-Fields: | PROP_HWADDR
+Fields: | HWADDR
 
 The static EUI64 address of the device. This value is read-only, but
 may be writable under certain vendor-defined circumstances.
@@ -216,7 +216,7 @@ may be writable under certain vendor-defined circumstances.
 
 Octets: |    1
 --------|------------
-Fields: | PROP_LOCK
+Fields: | LOCK
 
 Property lock. Used for grouping changes to several properties to
 take effect at once, or to temporarily prevent the automatic updating

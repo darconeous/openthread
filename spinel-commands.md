@@ -56,7 +56,7 @@ instead with the value set to the generated status code for the error.
 
 Octets: |    1   |          1         |   1-3   |    *n*
 --------|--------|--------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_SET | PROP_ID | PROP_VALUE
+Fields: | HEADER | CMD_PROP_VALUE_SET | PROP_ID | VALUE
 
 Set property value command. Instructs the NCP to set the given
 property to the specific given value, replacing any previous value.
@@ -75,7 +75,7 @@ with the value set to the generated status code for the error.
 
 Octets: |    1   |          1            |   1-3   |    *n*
 --------|--------|-----------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_INSERT | PROP_ID | VALUE_TO_INSERT
+Fields: | HEADER | CMD_PROP_VALUE_INSERT | PROP_ID | VALUE
 
 Insert value into property command. Instructs the NCP to insert the
 given value into a list-oriented property, without removing other
@@ -96,7 +96,7 @@ with the value set to the generated status code for the error.
 
 Octets: |    1   |          1            |   1-3   |    *n*
 --------|--------|-----------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_REMOVE | PROP_ID | VALUE_TO_REMOVE
+Fields: | HEADER | CMD_PROP_VALUE_REMOVE | PROP_ID | VALUE
 
 Remove value from property command. Instructs the NCP to remove the
 given value from a list-oriented property, without affecting other
@@ -118,7 +118,7 @@ with the value set to the generated status code for the error.
 
 Octets: |    1   |          1        |   1-3   |    *n*
 --------|--------|-------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_IS | PROP_ID | PROP_VALUE
+Fields: | HEADER | CMD_PROP_VALUE_IS | PROP_ID | VALUE
 
 Property value notification command. This command can be sent by the
 NCP in response to a previous command from the host, or it can be sent
@@ -135,7 +135,7 @@ the current value of the given property.
 
 Octets: |    1   |            1            |   1-3   |    *n*
 --------|--------|-------------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_INSERTED | PROP_ID | PROP_VALUE
+Fields: | HEADER | CMD_PROP_VALUE_INSERTED | PROP_ID | VALUE
 
 Property value insertion notification command. This command can be
 sent by the NCP in response to the `CMD_PROP_VALUE_INSERT` command, or
@@ -153,7 +153,7 @@ property.
 
 Octets: |    1   |            1           |   1-3   |    *n*
 --------|--------|------------------------|---------|------------
-Fields: | HEADER | CMD_PROP_VALUE_REMOVED | PROP_ID | PROP_VALUE
+Fields: | HEADER | CMD_PROP_VALUE_REMOVED | PROP_ID | VALUE
 
 Property value removal notification command. This command can be sent
 by the NCP in response to the `CMD_PROP_VALUE_REMOVE` command, or it
