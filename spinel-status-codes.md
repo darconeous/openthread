@@ -44,7 +44,7 @@ See (#prop-last-status) for more information on `PROP_LAST_STATUS`.
  *  19: `STATUS_ALREADY`: The operation is already in progress or
     the property was already set to the given value.
  *  20: `STATUS_ITEM_NOT_FOUND`: The given item could not be found in the property. 
- *  21-111: *RESERVED*
+ *  21-111: RESERVED
  *  112-127: Reset Causes
      *  112: `STATUS_RESET_POWER_ON`
      *  113: `STATUS_RESET_EXTERNAL`
@@ -55,10 +55,10 @@ See (#prop-last-status) for more information on `PROP_LAST_STATUS`.
      *  118: `STATUS_RESET_OTHER`
      *  119: `STATUS_RESET_UNKNOWN`
      *  120: `STATUS_RESET_WATCHDOG`
-     *  121-127: *RESERVED-RESET-CODES*
- *  128 - 15,359: *UNALLOCATED*
+     *  121-127: RESERVED-RESET-CODES
+ *  128 - 15,359: UNALLOCATED
  *  15,360 - 16,383: Vendor-specific
- *  16,384 - 1,999,999: *UNALLOCATED*
+ *  16,384 - 1,999,999: UNALLOCATED
  *  2,000,000 - 2,097,151: Experimental Use Only (MUST NEVER be used
     in production!)
 

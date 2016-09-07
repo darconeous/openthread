@@ -23,10 +23,10 @@ Hardware flow control is preferred over software flow control. In the
 absence of hardware flow control, software flow control (XON/XOFF) **MUST**
 be used instead.
 
-We also recommend an arduino-style hardware reset, where the DTR
+We also **RECOMMEND** an arduino-style hardware reset, where the DTR
 signal is coupled to the `R̅E̅S̅` pin through a 0.01µF capacitor. This
 causes the NCP to automatically reset whenever the serial port is
-opened. At the very least we recommend dedicating one of your host
+opened. At the very least we **RECOMMEND** dedicating one of your host
 pins to controlling the `R̅E̅S̅` pin on the NCP, so that you can
 easily perform a hardware reset if necessary.
 

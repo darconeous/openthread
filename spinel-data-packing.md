@@ -6,7 +6,7 @@ a serialization is defined by a specially formatted string.
 
 Goals:
 
- *  Be very lightweight and favor direct representation of values.
+ *  Be lightweight and favor direct representation of values.
  *  Use an easily readable and memorable format string.
  *  Support lists and structures.
  *  Allow properties to be appended to structures while maintaining
